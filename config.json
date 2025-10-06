@@ -1,0 +1,581 @@
+{
+  "configPath": "config.json",
+  "transformations": [
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "private-browsing-logo.svg",
+      "outputPath": "content/about-logo-private.png",
+      "outputFileType": "png",
+      "width": 192,
+      "height": 192,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "private-browsing-logo.svg",
+      "outputPath": "content/about-logo-private@2x.png",
+      "outputFileType": "png",
+      "width": 384,
+      "height": 384,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "content/about-logo.png",
+      "outputFileType": "png",
+      "width": 192,
+      "height": 192,
+      "fit": "contain"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "content/about-logo.svg"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "content/about-logo@2x.png",
+      "outputFileType": "png",
+      "width": 384,
+      "height": 384,
+      "fit": "contain"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "newtab-wordmark.svg",
+      "outputPath": "content/about-wordmark.svg"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "about-logo.png",
+      "outputPath": "content/about.png"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "aboutDialog.css",
+      "outputPath": "content/aboutDialog.css"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "newtab-wordmark.svg",
+      "outputPath": "content/firefox-wordmark.svg"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "content/jar.mn",
+      "outputPath": "content/jar.mn"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "content/moz.build",
+      "outputPath": "content/moz.build"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "locales/brand.ftl",
+      "outputPath": "locales/en-US/brand.ftl"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "locales/brand.properties",
+      "outputPath": "locales/en-US/brand.properties"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "locales/jar.mn",
+      "outputPath": "locales/jar.mn"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "locales/moz.build",
+      "outputPath": "locales/moz.build"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "document-generic.png",
+      "outputPath": "msix/Assets/Document44x44.png",
+      "outputFileType": "png",
+      "width": 44,
+      "height": 44,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/LargeTile.scale-200.png",
+      "outputFileType": "png",
+      "width": 620,
+      "height": 620,
+      "paddingPixelsWidth": 10,
+      "paddingPixelsHeight": 10,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/SmallTile.scale-200.png",
+      "outputFileType": "png",
+      "width": 142,
+      "height": 142,
+      "paddingPixelsWidth": 35,
+      "paddingPixelsHeight": 35,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png",
+      "outputFileType": "png",
+      "width": 256,
+      "height": 256,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Square44x44Logo.altform-unplated_targetsize-256.png",
+      "outputFileType": "png",
+      "width": 256,
+      "height": 256,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Square44x44Logo.scale-200.png",
+      "outputFileType": "png",
+      "width": 88,
+      "height": 88,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Square44x44Logo.targetsize-256.png",
+      "outputFileType": "png",
+      "width": 256,
+      "height": 256,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Square150x150Logo.scale-200.png",
+      "outputFileType": "png",
+      "width": 300,
+      "height": 300,
+      "paddingPixelsWidth": 4,
+      "paddingPixelsHeight": 4,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/StoreLogo.scale-200.png",
+      "outputFileType": "png",
+      "width": 100,
+      "height": 100,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/Wide310x150Logo.scale-200.png",
+      "outputFileType": "png",
+      "width": 620,
+      "height": 300,
+      "paddingPixelsWidth": 260,
+      "paddingPixelsHeight": 100,
+      "fit": "contain"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "prefs.js",
+      "outputPath": "pref/firefox-branding.js"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "windows/stub-background.jpg",
+      "outputPath": "stubinstaller/bgstub.jpg"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "windows/stubinstaller/installing-page.css",
+      "outputPath": "stubinstaller/installing_page.css"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "windows/stubinstaller/profile-cleanup-page.css",
+      "outputPath": "stubinstaller/profile_cleanup_page.css"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "windows/stubinstaller/branding.nsi",
+      "outputPath": "branding.nsi"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "mac/background.png",
+      "outputPath": "background.png"
+    },
+    {
+      "type": "copy-preprocess",
+      "fileType": "static",
+      "inputPath": "configure.sh",
+      "outputPath": "configure.sh"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default16.png",
+      "outputFileType": "png",
+      "width": 16,
+      "height": 16,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default22.png",
+      "outputFileType": "png",
+      "width": 22,
+      "height": 22,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default24.png",
+      "outputFileType": "png",
+      "width": 24,
+      "height": 24,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default32.png",
+      "outputFileType": "png",
+      "width": 32,
+      "height": 32,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default48.png",
+      "outputFileType": "png",
+      "width": 48,
+      "height": 48,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default64.png",
+      "outputFileType": "png",
+      "width": 64,
+      "height": 64,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default128.png",
+      "outputFileType": "png",
+      "width": 128,
+      "height": 128,
+      "paddingPixelsWidth": 4,
+      "paddingPixelsHeight": 4,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "default256.png",
+      "outputFileType": "png",
+      "width": 256,
+      "height": 256,
+      "paddingPixelsWidth": 8,
+      "paddingPixelsHeight": 8,
+      "fit": "contain"
+    },
+    {
+      "type": "icns",
+      "fileType": "source",
+      "inputPath": "mac/disk.png",
+      "outputPath": "disk.icns",
+      "sizes": [
+        1024,
+        512,
+        256,
+        128,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "ico",
+      "fileType": "source",
+      "inputPath": "document-pdf.svg",
+      "outputPath": "document_pdf.ico",
+      "sizes": [
+        256,
+        48,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "icns",
+      "fileType": "source",
+      "inputPath": "document-generic.png",
+      "outputPath": "document.icns",
+      "sizes": [
+        1024,
+        512,
+        256,
+        128,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "ico",
+      "fileType": "source",
+      "inputPath": "document-generic.png",
+      "outputPath": "document.ico",
+      "sizes": [
+        256,
+        48,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "icns",
+      "fileType": "source",
+      "inputPath": "mac/icon.svg",
+      "outputPath": "firefox.icns",
+      "sizes": [
+        1024,
+        512,
+        256,
+        128,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "ico",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "firefox.ico",
+      "sizes": [
+        256,
+        48,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "ico",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "firefox64.ico",
+      "sizes": [
+        64,
+        48,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "LICENSE",
+      "outputPath": "LICENSE"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "moz.build",
+      "outputPath": "moz.build"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "newtab.ico",
+      "outputPath": "newtab.ico"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "newwindow.ico",
+      "outputPath": "newwindow.ico"
+    },
+    {
+      "type": "ico",
+      "fileType": "source",
+      "inputPath": "private-browsing-logo.svg",
+      "outputPath": "pbmode.ico",
+      "sizes": [
+        256,
+        48,
+        32,
+        16
+      ]
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "windows/firefox.VisualElementsManifest.xml",
+      "outputPath": "firefox.VisualElementsManifest.xml"
+    },
+    {
+      "type": "copy",
+      "fileType": "static",
+      "inputPath": "windows/private_browsing.VisualElementsManifest.xml",
+      "outputPath": "private_browsing.VisualElementsManifest.xml"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "private-browsing-logo.svg",
+      "outputPath": "PrivateBrowsing_150.png",
+      "outputFileType": "png",
+      "width": 150,
+      "height": 150,
+      "paddingPixelsWidth": 36,
+      "paddingPixelsHeight": 36,
+      "offsetY": -10,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "private-browsing-logo.svg",
+      "outputPath": "PrivateBrowsing_70.png",
+      "outputFileType": "png",
+      "width": 70,
+      "height": 70,
+      "paddingPixelsWidth": 16,
+      "paddingPixelsHeight": 16,
+      "offsetY": -1,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "VisualElements_150.png",
+      "outputFileType": "png",
+      "width": 150,
+      "height": 150,
+      "paddingPixelsWidth": 35,
+      "paddingPixelsHeight": 35,
+      "offsetY": -10,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
+      "outputPath": "VisualElements_70.png",
+      "outputFileType": "png",
+      "width": 70,
+      "height": 70,
+      "paddingPixelsWidth": 14,
+      "paddingPixelsHeight": 14,
+      "offsetY": -1,
+      "fit": "contain"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "windows/wizard-header.png",
+      "outputPath": "wizHeader.bmp"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "windows/wizard-header-rtl.png",
+      "outputPath": "wizHeaderRTL.bmp"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "windows/wizard-banner.png",
+      "outputPath": "wizWatermark.bmp"
+    },
+    {
+      "type": "assets-car",
+      "fileType": "source",
+      "inputPath": "mac/glass.icon",
+      "appIconInput": "mac/icon.svg",
+      "appIconFileType": "source",
+      "iconInput": "logo.svg",
+      "iconFileType": "source",
+      "outputPath": "Assets.car"
+    },
+    {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "mac/dsstore",
+      "outputPath": "dsstore"
+    },
+    {
+      "type": "ds-store",
+      "fileType": "source",
+      "inputPath": "mac/dsstore",
+      "outputPath": "dsstore",
+      "appName": "{{#str brandShortcutName}}.app",
+      "volumeName": "{{#str brandShortcutName}}",
+      "backgroundImage": "mac/background.png",
+      "backgroundImageFileType": "source",
+      "volumeIcon": "mac/disk.png",
+      "volumeIconFileType": "source"
+    }
+  ]
+}

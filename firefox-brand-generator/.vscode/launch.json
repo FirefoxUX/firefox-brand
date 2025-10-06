@@ -1,0 +1,73 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'firefox_brand_generator'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=firefox-brand-generator"
+                ],
+                "filter": {
+                    "name": "firefox_brand_generator",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'firefox-brand-generator'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=firefox-brand-generator",
+                    "--package=firefox-brand-generator"
+                ],
+                "filter": {
+                    "name": "firefox-brand-generator",
+                    "kind": "bin"
+                }
+            },
+            "args": [
+                "../config.json",
+                "../brands/official",
+                "../static",
+                "-o",
+                "../dist",
+                "--only",
+                "ds-store"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'firefox-brand-generator'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=firefox-brand-generator",
+                    "--package=firefox-brand-generator"
+                ],
+                "filter": {
+                    "name": "firefox-brand-generator",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

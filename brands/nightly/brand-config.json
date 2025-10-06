@@ -1,0 +1,12 @@
+{
+  "env": {
+    "name": "nightly"
+  },
+  "strings": {
+    "buildName": "Nightly",
+    "brandShorterName": "Nightly",
+    "brandShortName": "Nightly",
+    "brandFullName": "Firefox Nightly",
+    "brandShortcutName": "Firefox Nightly"
+  }
+}

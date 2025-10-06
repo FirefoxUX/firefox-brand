@@ -1,0 +1,12 @@
+{
+  "env": {
+    "name": "aurora"
+  },
+  "strings": {
+    "buildName": "Aurora",
+    "brandShorterName": "Firefox",
+    "brandShortName": "Firefox Developer Edition",
+    "brandFullName": "Firefox Developer Edition",
+    "brandShortcutName": "Firefox Developer Edition"
+  }
+}

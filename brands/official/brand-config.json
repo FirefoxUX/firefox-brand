@@ -1,0 +1,12 @@
+{
+  "env": {
+    "name": "official"
+  },
+  "strings": {
+    "buildName": "Official",
+    "brandShorterName": "Firefox",
+    "brandShortName": "Firefox",
+    "brandFullName": "Mozilla Firefox",
+    "brandShortcutName": "Firefox"
+  }
+}

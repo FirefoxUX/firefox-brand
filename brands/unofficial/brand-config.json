@@ -1,0 +1,12 @@
+{
+  "env": {
+    "name": "unofficial"
+  },
+  "strings": {
+    "buildName": "Unofficial",
+    "brandShorterName": "Nightly",
+    "brandShortName": "Nightly",
+    "brandFullName": "Nightly",
+    "brandShortcutName": "Nightly"
+  }
+}

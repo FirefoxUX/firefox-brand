@@ -1,0 +1,46 @@
+[package]
+name = "firefox-brand-generator"
+version = "0.1.0"
+edition = "2024"
+description = "CLI tool to generate Firefox brand assets from source files"
+license = "MozPL 2.0"
+
+[dependencies]
+# CLI argument parsing
+clap = { version = "4.5", features = ["derive"] }
+
+# Configuration and serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Image processing
+image = "0.25"
+resvg = "0.45"
+tiny-skia = "0.11"
+
+# ICO file generation
+ico = "0.3"
+
+# Error handling
+thiserror = "1.0"
+
+# Temporary directories
+uuid = { version = "1.10", features = ["v4"] }
+
+# Version comparison and plist parsing
+semver = "1.0"
+regex = "1.11.3"
+
+# Colorful terminal output
+owo-colors = "4.1"
+
+[dev-dependencies]
+tempfile = "3.10"
+
+[[bin]]
+name = "firefox-brand-generator"
+path = "src/main.rs"
+
+[lib]
+name = "firefox_brand_generator"
+path = "src/lib.rs"
