@@ -7,6 +7,10 @@
     "brandShorterName": "Nightly",
     "brandShortName": "Nightly",
     "brandFullName": "Nightly",
-    "brandShortcutName": "Nightly"
+    "brandShortcutName": "Nightly",
+    "dmgWindowPosition": "200 120",
+    "dmgWindowSize": "512 342",
+    "dmgAppIconPosition": "103 185",
+    "dmgAppDropLinkPosition": "404 185"
   }
 }

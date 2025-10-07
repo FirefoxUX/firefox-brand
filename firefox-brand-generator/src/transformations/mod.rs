@@ -9,6 +9,7 @@ pub mod raster;
 use crate::config::{BrandConfig, FileType, Transformation};
 use crate::error::{Error, Result};
 use crate::platform::PlatformCapabilities;
+use crate::utils::string_processing;
 use std::path::{Path, PathBuf};
 
 pub struct TransformationContext<'a> {
@@ -86,8 +87,8 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
         }
 
         Transformation::AssetsCar {
-            input_path,
-            file_type,
+            liquid_glass_icon_path,
+            liquid_glass_icon_file_type,
             output_path,
             app_icon_input,
             app_icon_file_type,
@@ -100,8 +101,12 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
                 ));
             }
 
-            let resolved_input_path =
-                resolve_input_path(file_type, input_path, ctx.source_dir, ctx.static_dir)?;
+            let resolved_liquid_glass_icon_path = resolve_input_path(
+                liquid_glass_icon_file_type,
+                liquid_glass_icon_path,
+                ctx.source_dir,
+                ctx.static_dir,
+            )?;
             let resolved_output_path = ctx.output_dir.join(output_path);
 
             let app_icon_path = resolve_input_path(
@@ -115,7 +120,7 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
                 resolve_input_path(icon_file_type, icon_input, ctx.source_dir, ctx.static_dir)?;
 
             assets_car::execute(
-                &resolved_input_path,
+                &resolved_liquid_glass_icon_path,
                 &resolved_output_path,
                 &app_icon_path,
                 &icon_path_input,
@@ -158,6 +163,10 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
             background_image_file_type,
             volume_icon,
             volume_icon_file_type,
+            window_position,
+            window_size,
+            app_icon_position,
+            app_drop_link_position,
         } => {
             // Check required platform tools
             if !ctx.capabilities.has_sips {
@@ -175,6 +184,25 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
                     "iconutil (required for .DS_Store generation)".to_string(),
                 ));
             }
+
+            // Process string substitutions for template fields
+            let processed_app_name =
+                string_processing::process_string_replacements(app_name, ctx.brand_config)?;
+            let processed_volume_name =
+                string_processing::process_string_replacements(volume_name, ctx.brand_config)?;
+            let processed_window_position =
+                string_processing::process_string_replacements(window_position, ctx.brand_config)?;
+            let processed_window_size =
+                string_processing::process_string_replacements(window_size, ctx.brand_config)?;
+            let processed_app_icon_position = string_processing::process_string_replacements(
+                app_icon_position,
+                ctx.brand_config,
+            )?;
+            let processed_app_drop_link_position = string_processing::process_string_replacements(
+                app_drop_link_position,
+                ctx.brand_config,
+            )?;
+
             let resolved_output_path = ctx.output_dir.join(output_path);
 
             let background_image_path = resolve_input_path(
@@ -193,11 +221,14 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
 
             dsstore::execute(
                 &resolved_output_path,
-                app_name,
-                volume_name,
+                &processed_app_name,
+                &processed_volume_name,
                 &background_image_path,
                 &volume_icon_path,
-                ctx.brand_config,
+                &processed_window_position,
+                &processed_window_size,
+                &processed_app_icon_position,
+                &processed_app_drop_link_position,
             )
         }
     }

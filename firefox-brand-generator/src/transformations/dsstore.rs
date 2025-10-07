@@ -1,9 +1,7 @@
-use crate::config::types::BrandConfig;
 use crate::error::{Error, Result};
 use crate::platform::macos;
 use crate::temp::TempDir;
 use crate::transformations::icns;
-use crate::utils::string_processing;
 use owo_colors::OwoColorize;
 use std::fs;
 use std::path::Path;
@@ -15,18 +13,47 @@ pub fn execute(
     volume_name: &str,
     background_image_path: &Path,
     volume_icon_path: &Path,
-    brand_config: &BrandConfig,
+    window_position: &str,
+    window_size: &str,
+    app_icon_position: &str,
+    app_drop_link_position: &str,
 ) -> Result<()> {
-    // Process string replacements in app_name and volume_name
-    let processed_app_name =
-        string_processing::process_string_replacements(app_name, brand_config)?;
-    let processed_volume_name =
-        string_processing::process_string_replacements(volume_name, brand_config)?;
+    // Split the space-separated values (string substitution is done in mod.rs)
+    let window_pos_parts: Vec<&str> = window_position.split_whitespace().collect();
+    let window_size_parts: Vec<&str> = window_size.split_whitespace().collect();
+    let app_icon_pos_parts: Vec<&str> = app_icon_position.split_whitespace().collect();
+    let app_drop_link_pos_parts: Vec<&str> = app_drop_link_position.split_whitespace().collect();
+
+    // Validate that we have the expected number of parts
+    if window_pos_parts.len() != 2 {
+        return Err(Error::Transformation(format!(
+            "Invalid window position format: '{}'. Expected 'x y'",
+            window_position
+        )));
+    }
+    if window_size_parts.len() != 2 {
+        return Err(Error::Transformation(format!(
+            "Invalid window size format: '{}'. Expected 'width height'",
+            window_size
+        )));
+    }
+    if app_icon_pos_parts.len() != 2 {
+        return Err(Error::Transformation(format!(
+            "Invalid app icon position format: '{}'. Expected 'x y'",
+            app_icon_position
+        )));
+    }
+    if app_drop_link_pos_parts.len() != 2 {
+        return Err(Error::Transformation(format!(
+            "Invalid app drop link position format: '{}'. Expected 'x y'",
+            app_drop_link_position
+        )));
+    }
 
     // Create temporary directory structure
     let temp_dir = TempDir::new("firefox-brand-dsstore")?;
     let src_dir = temp_dir.create_dir("src")?;
-    let app_dir = src_dir.join(&processed_app_name);
+    let app_dir = src_dir.join(app_name);
     fs::create_dir_all(&app_dir)?;
 
     // Copy background image to temp directory and set DPI
@@ -55,32 +82,32 @@ pub fn execute(
     let dmg_name = "firefox-installer.dmg";
     let status = Command::new(original_dir.join(create_dmg_script))
         .arg("--volname")
-        .arg(&processed_volume_name)
+        .arg(volume_name)
         .arg("--volicon")
         .arg("disk.icns")
         .arg("--background")
         .arg("background.png")
         .arg("--window-pos")
-        .arg("200")
-        .arg("120")
+        .arg(window_pos_parts[0])
+        .arg(window_pos_parts[1])
         .arg("--window-size")
-        .arg("680")
-        .arg("400")
+        .arg(window_size_parts[0])
+        .arg(window_size_parts[1])
         .arg("--icon-size")
         .arg("128")
         .arg("--text-size")
         .arg("12")
         .arg("--icon")
-        .arg(&processed_app_name)
-        .arg("209")
-        .arg("220")
+        .arg(app_name)
+        .arg(app_icon_pos_parts[0])
+        .arg(app_icon_pos_parts[1])
         .arg("--app-drop-link")
-        .arg("472")
-        .arg("220")
+        .arg(app_drop_link_pos_parts[0])
+        .arg(app_drop_link_pos_parts[1])
         .arg("--app-drop-link-name")
         .arg(" ")
         .arg("--hide-extension")
-        .arg(&processed_app_name)
+        .arg(app_name)
         .arg("--no-internet-enable")
         .arg(dmg_name)
         .arg("src/")
@@ -143,48 +170,4 @@ pub fn execute(
     macos::unmount_volume(&mount_point)?;
 
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::collections::HashMap;
-
-    #[test]
-    fn test_dsstore_string_processing() {
-        // Set up brand config with test values
-        let mut strings = HashMap::new();
-        strings.insert("appName".to_string(), "Firefox".to_string());
-        strings.insert("shortAppName".to_string(), "FF".to_string());
-
-        let brand_config = BrandConfig {
-            strings,
-            env: HashMap::new(),
-        };
-
-        // Test app name with extension
-        let app_name = "{{#str appName}}.app";
-        let expected_app_name = "Firefox.app";
-
-        let result =
-            string_processing::process_string_replacements(app_name, &brand_config).unwrap();
-        assert_eq!(result, expected_app_name);
-
-        // Test volume name
-        let volume_name = "{{#str shortAppName}}";
-        let expected_volume_name = "FF";
-
-        let result =
-            string_processing::process_string_replacements(volume_name, &brand_config).unwrap();
-        assert_eq!(result, expected_volume_name);
-
-        // Test complex app name
-        let complex_app_name = "{{#str appName}} Installer.app";
-        let expected_complex_app_name = "Firefox Installer.app";
-
-        let result =
-            string_processing::process_string_replacements(complex_app_name, &brand_config)
-                .unwrap();
-        assert_eq!(result, expected_complex_app_name);
-    }
 }

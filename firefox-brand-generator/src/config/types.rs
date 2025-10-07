@@ -77,10 +77,10 @@ pub enum Transformation {
         sizes: Vec<u32>,
     },
     AssetsCar {
-        #[serde(rename = "fileType")]
-        file_type: FileType,
-        #[serde(rename = "inputPath")]
-        input_path: String,
+        #[serde(rename = "liquidGlassIconFileType")]
+        liquid_glass_icon_file_type: FileType,
+        #[serde(rename = "liquidGlassIconPath")]
+        liquid_glass_icon_path: String,
         #[serde(rename = "outputPath")]
         output_path: String,
         #[serde(rename = "appIconInput")]
@@ -123,13 +123,21 @@ pub enum Transformation {
         volume_icon: String,
         #[serde(rename = "volumeIconFileType")]
         volume_icon_file_type: FileType,
+        #[serde(rename = "windowPosition")]
+        window_position: String,
+        #[serde(rename = "windowSize")]
+        window_size: String,
+        #[serde(rename = "appIconPosition")]
+        app_icon_position: String,
+        #[serde(rename = "appDropLinkPosition")]
+        app_drop_link_position: String,
     },
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(rename = "configPath")]
-    pub config_path: String,
+    #[serde(rename = "brandConfigPath")]
+    pub brand_config_path: String,
     pub transformations: Vec<Transformation>,
 }
 

@@ -24,7 +24,10 @@ pub fn run(
 ) -> Result<()> {
     // Load configuration files
     let config = load_config(config_path)?;
-    let brand_config = load_brand_config(source_dir)?;
+
+    // Use the brand_config_path from the config, relative to source_dir
+    let brand_config_path = source_dir.join(&config.brand_config_path);
+    let brand_config = load_brand_config(&brand_config_path)?;
 
     // Set up paths
     let paths = GeneratorPaths {

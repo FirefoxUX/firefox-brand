@@ -1,5 +1,5 @@
 {
-  "configPath": "config.json",
+  "brandConfigPath": "brand-config.json",
   "transformations": [
     {
       "type": "raster",
@@ -551,8 +551,8 @@
     },
     {
       "type": "assets-car",
-      "fileType": "source",
-      "inputPath": "mac/glass.icon",
+      "liquidGlassIconFileType": "source",
+      "liquidGlassIconPath": "mac/glass.icon",
       "appIconInput": "mac/icon.svg",
       "appIconFileType": "source",
       "iconInput": "logo.svg",
@@ -567,15 +567,17 @@
     },
     {
       "type": "ds-store",
-      "fileType": "source",
-      "inputPath": "mac/dsstore",
       "outputPath": "dsstore",
       "appName": "{{#str brandShortcutName}}.app",
       "volumeName": "{{#str brandShortcutName}}",
       "backgroundImage": "mac/background.png",
       "backgroundImageFileType": "source",
       "volumeIcon": "mac/disk.png",
-      "volumeIconFileType": "source"
+      "volumeIconFileType": "source",
+      "windowPosition": "{{#str dmgWindowPosition}}",
+      "windowSize": "{{#str dmgWindowSize}}",
+      "appIconPosition": "{{#str dmgAppIconPosition}}",
+      "appDropLinkPosition": "{{#str dmgAppDropLinkPosition}}"
     }
   ]
 }

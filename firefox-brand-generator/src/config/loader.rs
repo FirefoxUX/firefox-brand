@@ -14,9 +14,7 @@ pub fn load_config(config_path: &Path) -> Result<Config> {
     Ok(config)
 }
 
-pub fn load_brand_config(source_dir: &Path) -> Result<BrandConfig> {
-    let brand_config_path = source_dir.join("brand-config.json");
-
+pub fn load_brand_config(brand_config_path: &Path) -> Result<BrandConfig> {
     if !brand_config_path.exists() {
         // Brand config is optional
         return Ok(BrandConfig::default());

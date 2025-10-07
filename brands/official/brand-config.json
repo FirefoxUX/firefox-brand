@@ -7,6 +7,10 @@
     "brandShorterName": "Firefox",
     "brandShortName": "Firefox",
     "brandFullName": "Mozilla Firefox",
-    "brandShortcutName": "Firefox"
+    "brandShortcutName": "Firefox",
+    "dmgWindowPosition": "200 120",
+    "dmgWindowSize": "512 342",
+    "dmgAppIconPosition": "112 181",
+    "dmgAppDropLinkPosition": "400 181"
   }
 }
