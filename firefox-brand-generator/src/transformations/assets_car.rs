@@ -76,7 +76,7 @@ fn generate_app_icon_set(xcassets_path: &Path, input: &Path) -> Result<()> {
 
         let img = match &img_source {
             ImageSource::Svg(svg_data) => {
-                image_processing::rasterize_svg(svg_data, actual_size, actual_size)?
+                image_processing::rasterize_svg_contain(svg_data, actual_size, actual_size)?
             }
             ImageSource::Raster(img) => image_processing::resize(img, actual_size, actual_size)?,
         };
@@ -128,7 +128,7 @@ fn generate_icon_set(xcassets_path: &Path, input: &Path) -> Result<()> {
 
         let img = match &img_source {
             ImageSource::Svg(svg_data) => {
-                image_processing::rasterize_svg(svg_data, actual_size, actual_size)?
+                image_processing::rasterize_svg_contain(svg_data, actual_size, actual_size)?
             }
             ImageSource::Raster(img) => image_processing::resize(img, actual_size, actual_size)?,
         };

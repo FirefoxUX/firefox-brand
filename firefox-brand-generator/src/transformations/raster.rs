@@ -30,8 +30,8 @@ pub fn execute(
     // Convert to raster if needed, using the content dimensions
     let img = match img_source {
         ImageSource::Svg(svg_data) => {
-            // For SVG, we rasterize to the content size first
-            image_processing::rasterize_svg(&svg_data, content_width, content_height)?
+            // For SVG, we rasterize with the FitStrategy applied directly
+            image_processing::rasterize_svg(&svg_data, content_width, content_height, fit)?
         }
         ImageSource::Raster(img) => {
             // For raster images, we need to handle different fit strategies

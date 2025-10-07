@@ -16,7 +16,9 @@ pub fn execute(input_path: &Path, output_path: &Path, sizes: &[u32]) -> Result<(
     // Generate images for each size
     for &size in sizes {
         let img = match &img_source {
-            ImageSource::Svg(svg_data) => image_processing::rasterize_svg(svg_data, size, size)?,
+            ImageSource::Svg(svg_data) => {
+                image_processing::rasterize_svg_contain(svg_data, size, size)?
+            }
             ImageSource::Raster(img) => image_processing::resize(img, size, size)?,
         };
 
