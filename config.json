@@ -50,7 +50,7 @@
     {
       "type": "copy",
       "fileType": "source",
-      "inputPath": "newtab-wordmark.svg",
+      "inputPath": "about-wordmark.svg",
       "outputPath": "content/about-wordmark.svg"
     },
     {
