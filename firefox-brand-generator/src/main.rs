@@ -56,7 +56,7 @@ struct Cli {
     #[arg(
         long,
         value_enum,
-        help = "Control macOS-specific transformations. Ignored if --only is used. Options:\n  - none (skip ds-store, icns, assets-car)\n  - simple (run icns, assets-car only)\n  - all (run all)."
+        help = "Control macOS-specific transformations. Ignored if --only is used. Options:\n  - none (skip ds-store, icns, assets-car)\n  - simple (run icns, ds-store only)\n  - all (run all)."
     )]
     mac: Option<MacModeArg>,
 }
