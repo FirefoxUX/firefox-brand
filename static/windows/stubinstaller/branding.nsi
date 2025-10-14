@@ -24,70 +24,64 @@
 # instead of BrandFullName and typically should not be modified.
 {{#if name == official}}
 !define BrandFullNameInternal "Mozilla Firefox"
-{{#elseif name == nightly}}
-!define BrandFullNameInternal "Nightly"
-{{#elseif name == aurora}}
-!define BrandFullNameInternal "Firefox Developer Edition"
-{{#else}}
-!define BrandFullNameInternal "Mozilla Developer Preview"
-{{#endif}}
-{{#if name == aurora}}
-!define BrandShortName        "Firefox Developer Edition"
-{{#endif}}
-{{#if name == official}}
 !define BrandFullName         "Mozilla Firefox"
-{{#elseif name == nightly}}
-!define BrandFullName         "Firefox Nightly"
-{{#elseif name == aurora}}
-!define BrandFullName         "Firefox Developer Edition"
-{{#else}}
-!define BrandFullName         "Mozilla Developer Preview"
-{{#endif}}
-{{#if name == official}}
 !define CompanyName           "Mozilla Corporation"
-{{#else}}
-!define CompanyName           "mozilla.org"
-{{#endif}}
 !define URLInfoAbout          "https://www.mozilla.org"
-{{#if name == official}}
 !define URLUpdateInfo         "https://www.mozilla.org/firefox/${AppVersion}/releasenotes"
-{{#endif}}
 !define HelpLink              "https://support.mozilla.org"
 
-{{#if name == official}}
 ; The OFFICIAL define is a workaround to support different urls for Release and
 ; Beta since they share the same branding when building with other branches that
 ; set the update channel to beta.
 !define OFFICIAL
+{{#elseif name == nightly}}
+!define BrandFullNameInternal "Nightly"
+!define BrandFullName         "Firefox Nightly"
+!define CompanyName           "mozilla.org"
+!define URLInfoAbout          "https://www.mozilla.org"
+!define HelpLink              "https://support.mozilla.org"
+{{#elseif name == aurora}}
+!define BrandFullNameInternal "Firefox Developer Edition"
+!define BrandShortName        "Firefox Developer Edition"
+!define BrandFullName         "Firefox Developer Edition"
+!define CompanyName           "mozilla.org"
+!define URLInfoAbout          "https://www.mozilla.org"
+!define HelpLink              "https://support.mozilla.org"
+{{#else}}
+!define BrandFullNameInternal "Mozilla Developer Preview"
+!define BrandFullName         "Mozilla Developer Preview"
+!define CompanyName           "mozilla.org"
+!define URLInfoAbout          "https://www.mozilla.org"
+!define HelpLink              "https://support.mozilla.org"
 {{#endif}}
+
 {{#if name == nightly}}
 !define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-nightly-latest"
 !define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-nightly-latest"
 !define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-nightly-latest"
+!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=nightly&installer_lang=${AB_CD}"
+!define URLSystemRequirements "https://www.mozilla.org/firefox/system-requirements/"
+!define Channel "nightly"
 {{#elseif name == aurora}}
 !define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-devedition-latest"
 !define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-devedition-latest"
 !define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-devedition-latest"
+!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=aurora&installer_lang=${AB_CD}"
+!define URLSystemRequirements "https://www.mozilla.org/firefox/system-requirements/"
+!define Channel "aurora"
+{{#elseif name == official}}
+!define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-latest"
+!define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-latest"
+!define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-latest"
+!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=release&installer_lang=${AB_CD}"
+!define URLSystemRequirements "https://www.mozilla.org/firefox/system-requirements/"
+!define Channel "release"
 {{#else}}
 !define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-latest"
 !define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-latest"
 !define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-latest"
-{{#endif}}
-{{#if name == nightly}}
-!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=nightly&installer_lang=${AB_CD}"
-{{#elseif name == aurora}}
-!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=aurora&installer_lang=${AB_CD}"
-{{#else}}
 !define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=release&installer_lang=${AB_CD}"
-{{#endif}}
 !define URLSystemRequirements "https://www.mozilla.org/firefox/system-requirements/"
-{{#if name == official}}
-!define Channel "release"
-{{#elseif name == nightly}}
-!define Channel "nightly"
-{{#elseif name == aurora}}
-!define Channel "aurora"
-{{#else}}
 !define Channel "unofficial"
 {{#endif}}
 
@@ -121,6 +115,25 @@
 !define INSTALL_PROGRESS_BAR_LEFT "270u"
 !define INSTALL_PROGRESS_BAR_WIDTH "150u"
 !define INSTALL_PROGRESS_BAR_HEIGHT "12u"
+
+!define PROFILE_CLEANUP_CHECKBOX_TOP_MARGIN "12u"
+!define PROFILE_CLEANUP_BUTTON_TOP_MARGIN "12u"
+!define PROFILE_CLEANUP_BUTTON_X_PADDING "80u"
+!define PROFILE_CLEANUP_BUTTON_Y_PADDING "8u"
+!define INSTALL_BODY_TOP_MARGIN "20u"
+
+# Font settings that can be customized for each channel
+!define INSTALL_HEADER_FONT_SIZE 20
+!define INSTALL_HEADER_FONT_WEIGHT 600
+!define INSTALL_INSTALLING_FONT_SIZE 15
+!define INSTALL_INSTALLING_FONT_WEIGHT 600
+
+# UI Colors that can be customized for each channel
+!define COMMON_TEXT_COLOR 0x000000
+!define COMMON_BACKGROUND_COLOR 0xFFFFFF
+!define INSTALL_INSTALLING_TEXT_COLOR 0xFFFFFF
+# This color is written as 0x00BBGGRR because it's actually a COLORREF value.
+!define PROGRESS_BAR_BACKGROUND_COLOR 0xFFAA00
 {{#else}}
 # Dialog units are used so the UI displays correctly with the system's DPI
 # settings.
@@ -143,46 +156,22 @@
 !define INSTALL_PROGRESS_BAR_LEFT "20%"
 !define INSTALL_PROGRESS_BAR_WIDTH "60%"
 !define INSTALL_PROGRESS_BAR_HEIGHT "12u"
-{{#endif}}
 
-{{#if name == official}}
-!define PROFILE_CLEANUP_CHECKBOX_TOP_MARGIN "12u"
-!define PROFILE_CLEANUP_BUTTON_TOP_MARGIN "12u"
-!define PROFILE_CLEANUP_BUTTON_X_PADDING "80u"
-!define PROFILE_CLEANUP_BUTTON_Y_PADDING "8u"
-!define INSTALL_BODY_TOP_MARGIN "20u"
-{{#else}}
 !define PROFILE_CLEANUP_CHECKBOX_TOP_MARGIN "20u"
 !define PROFILE_CLEANUP_BUTTON_TOP_MARGIN "20u"
 !define PROFILE_CLEANUP_BUTTON_X_PADDING "40u"
 !define PROFILE_CLEANUP_BUTTON_Y_PADDING "4u"
-{{#endif}}
 
 # Font settings that can be customized for each channel
-{{#if name == official}}
-!define INSTALL_HEADER_FONT_SIZE 20
-!define INSTALL_HEADER_FONT_WEIGHT 600
-!define INSTALL_INSTALLING_FONT_SIZE 15
-!define INSTALL_INSTALLING_FONT_WEIGHT 600
-{{#else}}
 !define INSTALL_HEADER_FONT_SIZE 28
 !define INSTALL_HEADER_FONT_WEIGHT 400
 !define INSTALL_INSTALLING_FONT_SIZE 28
 !define INSTALL_INSTALLING_FONT_WEIGHT 400
-{{#endif}}
 
 # UI Colors that can be customized for each channel
-{{#if name == official}}
-!define COMMON_TEXT_COLOR 0x000000
-!define COMMON_BACKGROUND_COLOR 0xFFFFFF
-{{#else}}
 !define COMMON_TEXT_COLOR 0xFFFFFF
 !define COMMON_BACKGROUND_COLOR 0x000000
-{{#endif}}
 !define INSTALL_INSTALLING_TEXT_COLOR 0xFFFFFF
-{{#if name == official}}
-# This color is written as 0x00BBGGRR because it's actually a COLORREF value.
-!define PROGRESS_BAR_BACKGROUND_COLOR 0xFFAA00
 {{#endif}}
 {{#if name == aurora}}
 
