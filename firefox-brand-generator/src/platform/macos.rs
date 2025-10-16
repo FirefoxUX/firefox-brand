@@ -32,64 +32,31 @@ pub fn run_actool(xcassets_path: &Path, icon_path: &Path, output_dir: &Path) -> 
     // Create a temporary directory for actool output
     let temp_dir = TempDir::new("actool-output")?;
     let temp_output_dir = temp_dir.path();
-    let partial_info_plist = temp_output_dir.join("partial-info.plist");
 
-    // Build actool command with recommended arguments for robust asset compilation
-    let mut cmd = Command::new("actool");
-    // Output and error handling: request XML output and all notices/warnings/errors for better diagnostics
-    cmd.arg("--output-format=xml1")
-        .arg("--notices")
-        .arg("--warnings")
-        .arg("--errors")
-        // Specify platform and target device for macOS asset compilation
-        .arg("--platform=macosx")
-        .arg("--target-device=mac")
-        // Ensure consistent results regardless of host OS version
-        .arg("--lightweight-asset-runtime-mode=enabled")
-        // Use fallback bitmaps from .xcassets if present, disables actool's own bitmap generation
-        .arg("--enable-icon-stack-fallback-generation=enabled")
-        // Include all app icons in the output, required for proper bitmap fallback support
-        .arg("--include-all-app-icons")
-        // Specify the app icon name and minimum deployment target
-        .arg("--app-icon=AppIcon")
-        .arg("--minimum-deployment-target=26.0")
-        // Output locations for partial info plist and compiled assets
-        .arg(format!(
-            "--output-partial-info-plist={}",
-            partial_info_plist.display()
-        ))
-        .arg(format!("--compile={}", temp_output_dir.display()))
-        // Input asset catalog and icon package
+    let status = Command::new("actool")
         .arg(xcassets_path)
-        .arg(icon_path);
+        .arg(icon_path)
+        .arg("--compile")
+        .arg(temp_output_dir)
+        .arg("--target-device")
+        .arg("mac")
+        .arg("--platform")
+        .arg("macosx")
+        .arg("--minimum-deployment-target")
+        .arg("26.0")
+        .arg("--enable-on-demand-resources")
+        .arg("NO")
+        .arg("--app-icon")
+        .arg("AppIcon")
+        .arg("--output-partial-info-plist")
+        .arg(temp_output_dir.join("partial-info.plist"))
+        .status()?;
 
-    // Run actool and capture output
-    let output = cmd.output()?;
-
-    // Parse XML output for errors
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        let stdout = &output.stdout;
-        // Try to parse plist XML for error details
-        let mut error_msg = String::from("actool failed");
-        if !stdout.is_empty() {
-            use std::io::Cursor;
-            if let Ok(plist) = plist::Value::from_reader_xml(Cursor::new(stdout)) {
-                if let plist::Value::Dictionary(dict) = plist {
-                    if let Some(errors) = dict.get("com.apple.actool.errors") {
-                        error_msg.push_str(&format!("; errors: {:?}", errors));
-                    }
-                    if let Some(warnings) = dict.get("com.apple.actool.warnings") {
-                        error_msg.push_str(&format!("; warnings: {:?}", warnings));
-                    }
-                    if let Some(notices) = dict.get("com.apple.actool.notices") {
-                        error_msg.push_str(&format!("; notices: {:?}", notices));
-                    }
-                }
-            }
-        }
-        error_msg.push_str(&format!("; stderr: {}", stderr));
-        return Err(Error::Transformation(error_msg));
+    if !status.success() {
+        return Err(Error::PlatformToolFailed {
+            tool: "actool".to_string(),
+            code: status.code().unwrap_or(-1),
+        });
     }
 
     // Check if Assets.car was generated
