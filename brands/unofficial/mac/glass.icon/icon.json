@@ -1,13 +1,13 @@
 {
   "fill-specializations" : [
     {
-      "value" : "automatic"
+      "value" : {
+        "automatic-gradient" : "display-p3:0.10553,0.02074,0.21008,1.00000"
+      }
     },
     {
       "appearance" : "dark",
-      "value" : {
-        "solid" : "srgb:0.12549,0.07059,0.22745,1.00000"
-      }
+      "value" : "automatic"
     }
   ],
   "groups" : [
