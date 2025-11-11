@@ -14,5 +14,7 @@
 % locale branding @AB_CD@ %locale/branding/
 {{#if name != official}}
 # {{#str buildName}} branding only exists in en-US
+  locale/branding/brand.properties (en-US/brand.properties)
 {{#else}}
   locale/branding/brand.properties (%brand.properties)
+{{#endif}}
