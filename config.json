@@ -474,7 +474,7 @@
       ]
     },
     {
-      "type": "copy",
+      "type": "copy-preprocess",
       "fileType": "static",
       "inputPath": "windows/firefox.VisualElementsManifest.xml",
       "outputPath": "firefox.VisualElementsManifest.xml"
