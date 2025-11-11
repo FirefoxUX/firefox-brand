@@ -368,6 +368,12 @@
       ]
     },
     {
+      "type": "copy",
+      "fileType": "source",
+      "inputPath": "document-pdf.svg",
+      "outputPath": "content/document_pdf.svg"
+    },
+    {
       "type": "icns",
       "fileType": "source",
       "inputPath": "document-generic.png",
