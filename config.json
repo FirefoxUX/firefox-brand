@@ -491,11 +491,11 @@
       "inputPath": "private-browsing-logo.svg",
       "outputPath": "PrivateBrowsing_150.png",
       "outputFileType": "png",
-      "width": 150,
-      "height": 150,
-      "paddingPixelsWidth": 36,
-      "paddingPixelsHeight": 36,
-      "offsetY": -10,
+      "width": 270,
+      "height": 270,
+      "paddingPixelsWidth": 34,
+      "paddingPixelsHeight": 34,
+      "offsetY": -1,
       "fit": "contain"
     },
     {
@@ -504,11 +504,10 @@
       "inputPath": "private-browsing-logo.svg",
       "outputPath": "PrivateBrowsing_70.png",
       "outputFileType": "png",
-      "width": 70,
-      "height": 70,
-      "paddingPixelsWidth": 16,
-      "paddingPixelsHeight": 16,
-      "offsetY": -1,
+      "width": 126,
+      "height": 126,
+      "paddingPixelsWidth": 14,
+      "paddingPixelsHeight": 14,
       "fit": "contain"
     },
     {
@@ -517,11 +516,10 @@
       "inputPath": "logo.svg",
       "outputPath": "VisualElements_150.png",
       "outputFileType": "png",
-      "width": 150,
-      "height": 150,
-      "paddingPixelsWidth": 35,
-      "paddingPixelsHeight": 35,
-      "offsetY": -10,
+      "width": 270,
+      "height": 270,
+      "paddingPixelsWidth": 34,
+      "paddingPixelsHeight": 34,
       "fit": "contain"
     },
     {
@@ -530,11 +528,10 @@
       "inputPath": "logo.svg",
       "outputPath": "VisualElements_70.png",
       "outputFileType": "png",
-      "width": 70,
-      "height": 70,
+      "width": 126,
+      "height": 126,
       "paddingPixelsWidth": 14,
       "paddingPixelsHeight": 14,
-      "offsetY": -1,
       "fit": "contain"
     },
     {
