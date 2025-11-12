@@ -34,7 +34,7 @@ body {
 
 #header {
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
   margin-top: 0;
 }
 
@@ -94,7 +94,9 @@ body.high-contrast #progress_background {
 #progress_bar {
   margin: 0;
   width: 0%;
+{{#if name == aurora}}
   max-width: 100%;
+{{#endif}}
   height: 100%;
   background-color: #00aaff;
 }
