@@ -1,5 +1,6 @@
 pub mod assets_car;
 pub mod copy;
+pub mod copy_image_mac;
 pub mod copy_preprocess;
 pub mod dsstore;
 pub mod icns;
@@ -153,6 +154,25 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
                 &resolved_output_path,
                 ctx.brand_config,
             )
+        }
+
+        Transformation::CopyImageMac {
+            file_type,
+            input_path,
+            output_path,
+            dpi,
+        } => {
+            if !ctx.capabilities.has_sips {
+                return Err(Error::PlatformToolUnavailable(
+                    "sips (required for CopyImageMac transformation)".to_string(),
+                ));
+            }
+
+            let resolved_input_path =
+                resolve_input_path(file_type, input_path, ctx.source_dir, ctx.static_dir)?;
+            let resolved_output_path = ctx.output_dir.join(output_path);
+
+            copy_image_mac::execute(&resolved_input_path, &resolved_output_path, *dpi)
         }
 
         Transformation::DsStore {

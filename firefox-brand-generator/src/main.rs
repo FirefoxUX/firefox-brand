@@ -48,7 +48,7 @@ struct Cli {
         long,
         value_name = "TYPES",
         value_delimiter = ',',
-        help = "Comma-separated list of transformation types to run. If specified, only these types will be run and --mac is ignored.\nAvailable types: raster, ico, icns, assets-car, copy, copy-preprocess, ds-store"
+        help = "Comma-separated list of transformation types to run. If specified, only these types will be run and --mac is ignored.\nAvailable types: raster, ico, icns, assets-car, copy, copy-preprocess, copy-image-mac, ds-store"
     )]
     only: Option<Vec<String>>,
 
@@ -56,7 +56,7 @@ struct Cli {
     #[arg(
         long,
         value_enum,
-        help = "Control macOS-specific transformations. Ignored if --only is used. Options:\n  - none (skip ds-store, icns, assets-car)\n  - simple (run icns, ds-store only)\n  - all (run all)."
+        help = "Control macOS-specific transformations. Ignored if --only is used. Options:\n  - none (skip ds-store, icns, assets-car, copy-image-mac)\n  - simple (run icns, assets-car, copy-image-mac only)\n  - all (run all)."
     )]
     mac: Option<MacModeArg>,
 }
@@ -108,7 +108,7 @@ fn main() {
             MacMode::All
         } else if is_macos() {
             println!(
-                "{} Auto-detected macOS: enabling {} (icns + assets-car transformations)",
+                "{} Auto-detected macOS: enabling {} (icns + assets-car + copy-image-mac transformations)",
                 "[Info]".on_blue().bold(),
                 "simple Mac mode".bold()
             );
@@ -116,7 +116,7 @@ fn main() {
             MacMode::Simple
         } else {
             println!(
-                "{} Non-macOS platform detected: disabling Mac-specific transformations (ds-store, icns, assets-car)",
+                "{} Non-macOS platform detected: disabling Mac-specific transformations (ds-store, icns, assets-car, copy-image-mac)",
                 "[Info]".on_blue().bold()
             );
             MacMode::None
