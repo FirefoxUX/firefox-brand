@@ -286,8 +286,12 @@ fn process_if_blocks(content: &str, brand_config: &BrandConfig) -> Result<String
         i += 1;
     }
 
-    // Join processed lines and return
-    Ok(result_lines.join("\n"))
+    // Join processed lines and return, preserving trailing newline if input had one
+    let mut output = result_lines.join("\n");
+    if content.ends_with('\n') {
+        output.push('\n');
+    }
+    Ok(output)
 }
 
 #[cfg(test)]
