@@ -46,6 +46,18 @@ Derived paths for each brand:
 - **`-h, --help`** - Print help information
 - **`-V, --version`** - Print version information
 
+## Updating Firefox branding
+
+The generator's `dist/<brand>/` output is structured to be a drop-in replacement for the corresponding `browser/branding/<brand>/` directory in [mozilla-central](https://searchfox.org/firefox-main/source/browser/branding) — the folder layout, filenames, and relative paths match, including the per-brand `moz.build`, `jar.mn`, `locales/`, `content/`, and platform-specific subfolders.
+
+To regenerate assets, run `firefox-brand-generator --mac all` on macOS so the full set is produced (the macOS-only outputs `*.icns`, `Assets.car`, and `dsstore` are skipped on Linux, leaving a Linux-built `dist/` incomplete for a Firefox update). The result mirrors `browser/branding/<brand>/` file-for-file, so updating Firefox is a matter of copying the *changed* files from `dist/<brand>/` to the matching paths in your Firefox checkout.
+
+Notes:
+
+- **Upstream Firefox**: the existing branding assets in mozilla-central predate this generator, so even when an asset's visual content is unchanged, the regenerated binary will be very similar but not identical. To keep diffs minimal and reviewable, only replace files that have actually changed. Don't bulk-overwrite the directory just because the tool produced a fresh version.
+- **Firefox forks** can add their own brand by creating a new directory under `brands/<your-brand>/` mirroring `brands/official/` (SVG sources, `brand-config.json`, etc.), then running `firefox-brand-generator <your-brand>`.
+- The top-level `browser/branding/{moz.build, branding-common.mozbuild, docs/}` files are *not* produced by this tool.
+
 ## Configuration Format
 
 The main configuration file defines a list of transformations that specify how source assets are processed into output files. Each transformation has a `type` field and specific arguments based on the transformation type.
