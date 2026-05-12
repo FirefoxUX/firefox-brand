@@ -133,6 +133,18 @@
       "type": "raster",
       "fileType": "source",
       "inputPath": "logo.svg",
+      "outputPath": "msix/Assets/MedTile.scale-200.png",
+      "outputFileType": "png",
+      "width": 300,
+      "height": 300,
+      "paddingPixelsWidth": 75,
+      "paddingPixelsHeight": 75,
+      "fit": "contain"
+    },
+    {
+      "type": "raster",
+      "fileType": "source",
+      "inputPath": "logo.svg",
       "outputPath": "msix/Assets/SmallTile.scale-200.png",
       "outputFileType": "png",
       "width": 142,
