@@ -4,51 +4,37 @@ A tool for generating Firefox brand folder content in all its variations from a 
 
 ## Usage
 
-```bash
-firefox-brand-generator --help        # top-level help
-firefox-brand-generator build --help  # build subcommand help
-firefox-brand-generator custom --help # custom subcommand help
-```
-
-## Commands
-
-### `build` — standard repo usage
-
-Builds one or all brands using the fixed repo layout. Paths are auto-detected by walking up from the current directory to find the repo root (a directory containing `config.json` and `brands/`).
+Run from anywhere inside the repo — the tool walks up to find the repo root (a directory containing `config.json` and `brands/`).
 
 ```bash
-# Build all brands
-firefox-brand-generator build
+# Build every brand under brands/
+firefox-brand-generator
 
 # Build a specific brand
-firefox-brand-generator build official
-firefox-brand-generator build nightly
-
-# Explicit repo root (if auto-detection doesn't work)
-firefox-brand-generator build --root /path/to/repo
+firefox-brand-generator official
+firefox-brand-generator nightly
 
 # Only run specific transformation types
-firefox-brand-generator build official --only copy-preprocess,raster
+firefox-brand-generator official --only copy-preprocess,raster
+
+# Override the repo root (if auto-detection doesn't apply)
+firefox-brand-generator --root /path/to/repo
+
+# Override the output directory (default is <root>/dist)
+firefox-brand-generator official -o /tmp/build
 ```
 
 Derived paths for each brand:
 - Config: `{root}/config.json`
 - Source: `{root}/brands/{brand}/`
 - Static: `{root}/static/`
-- Output: `{root}/dist-{brand}/`
+- Output: `{output}/{brand}/` (defaults to `{root}/dist/{brand}/`)
 
-### `custom` — full path control
+### Options
 
-Accepts explicit paths for all inputs and output. Use this when the standard repo layout doesn't apply.
-
-```bash
-firefox-brand-generator custom config.json brands/official static -o dist-official
-```
-
-### Shared options
-
-Both subcommands accept:
-
+- **`[BRAND]`** - Brand to build. Omit to build all brands found under `{root}/brands/`
+- **`--root <DIR>`** - Repo root override (auto-detected by default)
+- **`-o, --output <DIR>`** - Output parent directory (default: `{root}/dist`). Each brand is written to `<DIR>/<BRAND>/`
 - **`--mac <MODE>`** - Control macOS-specific transformations
   - `none` - Skip all macOS-specific operations
   - `simple` - Run `icns`, `assets-car` only
@@ -58,7 +44,7 @@ Both subcommands accept:
   - Available types: `raster`, `ico`, `icns`, `assets-car`, `copy`, `copy-preprocess`, `ds-store`
   - When specified, only these types will be run and `--mac` is ignored
 - **`-h, --help`** - Print help information
-- **`-V, --version`** - Print version information (top-level only)
+- **`-V, --version`** - Print version information
 
 ## Configuration Format
 
