@@ -39,8 +39,15 @@ pub fn generate(
         );
     }
 
+    // Merge brand name into filter options so `only` fields in config.json are respected
+    let effective_filter = FilterOptions {
+        only_types: filter_options.only_types.clone(),
+        mac_mode: filter_options.mac_mode,
+        brand_name: brand_config.env.get("name").cloned(),
+    };
+
     // Filter transformations
-    let filtered = filter_transformations(&config.transformations, filter_options, &capabilities);
+    let filtered = filter_transformations(&config.transformations, &effective_filter, &capabilities);
 
     // Create transformation context
     let ctx = TransformationContext {

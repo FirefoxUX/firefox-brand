@@ -174,6 +174,16 @@ pub fn execute(input_path: &Path, output_path: &Path, brand_config: &BrandConfig
     // Preprocess the content
     let processed_content = preprocess_content(&content, brand_config)?;
 
+    // Warn and skip if all content was conditional and evaluated to nothing
+    if processed_content.trim().is_empty() {
+        eprintln!(
+            "{} Skipping '{}': processed content is empty (all content was inside unmatched conditionals)",
+            "Warning:".yellow().bold(),
+            output_path.display()
+        );
+        return Ok(());
+    }
+
     // Ensure the output directory exists
     if let Some(parent) = output_path.parent() {
         fs::create_dir_all(parent)?;

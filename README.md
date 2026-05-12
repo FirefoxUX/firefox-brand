@@ -5,27 +5,50 @@ A tool for generating Firefox brand folder content in all its variations from a 
 ## Usage
 
 ```bash
-# List of all available commands
-cargo run -- --help
-# Example
-cargo run -- ../config.json ../brands/official ../static -o ../dist-official
+firefox-brand-generator --help        # top-level help
+firefox-brand-generator build --help  # build subcommand help
+firefox-brand-generator custom --help # custom subcommand help
 ```
 
-## Command Line Options
+## Commands
 
-### Syntax
+### `build` — standard repo usage
 
-`firefox-brand-generator [OPTIONS] <CONFIG> <SOURCE> <STATIC_DIR>`
+Builds one or all brands using the fixed repo layout. Paths are auto-detected by walking up from the current directory to find the repo root (a directory containing `config.json` and `brands/`).
 
-### Arguments
+```bash
+# Build all brands
+firefox-brand-generator build
 
-- **`CONFIG`** - Path to the configuration JSON file
-- **`SOURCE`** - Path to the brand-specific source folder
-- **`STATIC_DIR`** - Path to the static assets folder
+# Build a specific brand
+firefox-brand-generator build official
+firefox-brand-generator build nightly
 
-### Options
+# Explicit repo root (if auto-detection doesn't work)
+firefox-brand-generator build --root /path/to/repo
 
-- **`-o, --output <DIR>`** - Path to the output/destination folder (default: `dist`)
+# Only run specific transformation types
+firefox-brand-generator build official --only copy-preprocess,raster
+```
+
+Derived paths for each brand:
+- Config: `{root}/config.json`
+- Source: `{root}/brands/{brand}/`
+- Static: `{root}/static/`
+- Output: `{root}/dist-{brand}/`
+
+### `custom` — full path control
+
+Accepts explicit paths for all inputs and output. Use this when the standard repo layout doesn't apply.
+
+```bash
+firefox-brand-generator custom config.json brands/official static -o dist-official
+```
+
+### Shared options
+
+Both subcommands accept:
+
 - **`--mac <MODE>`** - Control macOS-specific transformations
   - `none` - Skip all macOS-specific operations
   - `simple` - Run `icns`, `assets-car` only
@@ -35,7 +58,7 @@ cargo run -- ../config.json ../brands/official ../static -o ../dist-official
   - Available types: `raster`, `ico`, `icns`, `assets-car`, `copy`, `copy-preprocess`, `ds-store`
   - When specified, only these types will be run and `--mac` is ignored
 - **`-h, --help`** - Print help information
-- **`-V, --version`** - Print version information
+- **`-V, --version`** - Print version information (top-level only)
 
 ## Configuration Format
 

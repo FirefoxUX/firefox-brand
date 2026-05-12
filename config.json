@@ -72,7 +72,7 @@
       "outputPath": "content/firefox-wordmark.svg"
     },
     {
-      "type": "copy",
+      "type": "copy-preprocess",
       "fileType": "static",
       "inputPath": "content/jar.mn",
       "outputPath": "content/jar.mn"
@@ -441,7 +441,8 @@
       "type": "copy",
       "fileType": "static",
       "inputPath": "LICENSE",
-      "outputPath": "LICENSE"
+      "outputPath": "LICENSE",
+      "only": ["official"]
     },
     {
       "type": "copy",

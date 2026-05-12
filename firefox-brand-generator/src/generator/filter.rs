@@ -1,4 +1,4 @@
-use crate::config::Transformation;
+use crate::config::{Transformation, TransformationEntry};
 use crate::platform::PlatformCapabilities;
 use std::collections::HashSet;
 
@@ -15,9 +15,11 @@ impl Default for MacMode {
     }
 }
 
+#[derive(Clone)]
 pub struct FilterOptions {
     pub only_types: Option<HashSet<String>>,
     pub mac_mode: MacMode,
+    pub brand_name: Option<String>,
 }
 
 impl FilterOptions {
@@ -25,6 +27,7 @@ impl FilterOptions {
         Self {
             only_types: None,
             mac_mode: MacMode::default(),
+            brand_name: None,
         }
     }
 
@@ -37,19 +40,36 @@ impl FilterOptions {
         self.mac_mode = mac_mode;
         self
     }
+
+    pub fn with_brand_name(mut self, brand_name: String) -> Self {
+        self.brand_name = Some(brand_name);
+        self
+    }
 }
 
 pub fn filter_transformations(
-    transformations: &[Transformation],
+    transformations: &[TransformationEntry],
     options: &FilterOptions,
     capabilities: &PlatformCapabilities,
 ) -> Vec<(Transformation, bool)> {
     transformations
         .iter()
-        .filter_map(|t| {
+        .filter_map(|entry| {
+            // Skip if the entry's `only` list is set and this brand isn't in it
+            if let Some(ref only_brands) = entry.only {
+                let brand_matches = options
+                    .brand_name
+                    .as_deref()
+                    .map_or(false, |name| only_brands.iter().any(|b| b == name));
+                if !brand_matches {
+                    return None;
+                }
+            }
+
+            let t = &entry.transformation;
             let transformation_type = t.transformation_type();
 
-            // Check Mac mode filtering first
+            // Check Mac mode filtering
             let mac_allowed = match options.mac_mode {
                 MacMode::None => !matches!(transformation_type, "ds-store" | "icns" | "assets-car"),
                 MacMode::Simple => !matches!(transformation_type, "ds-store"),
