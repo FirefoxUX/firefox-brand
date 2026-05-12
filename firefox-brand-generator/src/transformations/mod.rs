@@ -234,6 +234,106 @@ pub fn execute(transformation: &Transformation, ctx: &TransformationContext) -> 
     }
 }
 
+/// Validate a transformation without executing it.
+///
+/// Resolves every input path (errors if any referenced file is missing) and
+/// expands template strings (errors on malformed templates or unknown
+/// `{{#str key}}` references). Skips platform tool checks and never writes
+/// to the filesystem — safe to run on Linux CI for macOS transformations.
+pub fn validate(transformation: &Transformation, ctx: &TransformationContext) -> Result<()> {
+    match transformation {
+        Transformation::Raster {
+            file_type,
+            input_path,
+            ..
+        }
+        | Transformation::Ico {
+            file_type,
+            input_path,
+            ..
+        }
+        | Transformation::Icns {
+            file_type,
+            input_path,
+            ..
+        }
+        | Transformation::Copy {
+            file_type,
+            input_path,
+            ..
+        }
+        | Transformation::CopyPreprocess {
+            file_type,
+            input_path,
+            ..
+        } => {
+            resolve_input_path(file_type, input_path, ctx.source_dir, ctx.static_dir)?;
+        }
+
+        Transformation::AssetsCar {
+            liquid_glass_icon_path,
+            liquid_glass_icon_file_type,
+            app_icon_input,
+            app_icon_file_type,
+            icon_input,
+            icon_file_type,
+            ..
+        } => {
+            resolve_input_path(
+                liquid_glass_icon_file_type,
+                liquid_glass_icon_path,
+                ctx.source_dir,
+                ctx.static_dir,
+            )?;
+            resolve_input_path(
+                app_icon_file_type,
+                app_icon_input,
+                ctx.source_dir,
+                ctx.static_dir,
+            )?;
+            resolve_input_path(icon_file_type, icon_input, ctx.source_dir, ctx.static_dir)?;
+        }
+
+        Transformation::DsStore {
+            app_name,
+            volume_name,
+            background_image,
+            background_image_file_type,
+            volume_icon,
+            volume_icon_file_type,
+            window_position,
+            window_size,
+            app_icon_position,
+            app_drop_link_position,
+            ..
+        } => {
+            for template in [
+                app_name,
+                volume_name,
+                window_position,
+                window_size,
+                app_icon_position,
+                app_drop_link_position,
+            ] {
+                string_processing::process_string_replacements(template, ctx.brand_config)?;
+            }
+            resolve_input_path(
+                background_image_file_type,
+                background_image,
+                ctx.source_dir,
+                ctx.static_dir,
+            )?;
+            resolve_input_path(
+                volume_icon_file_type,
+                volume_icon,
+                ctx.source_dir,
+                ctx.static_dir,
+            )?;
+        }
+    }
+    Ok(())
+}
+
 fn resolve_input_path(
     file_type: &FileType,
     input_path: &str,

@@ -51,6 +51,11 @@ struct Cli {
     /// Defaults to simple on macOS (icns + assets-car) and none elsewhere
     #[arg(long, value_enum, value_name = "MODE")]
     mac: Option<MacModeArg>,
+
+    /// Validate config and brand assets without producing any output.
+    /// Skips platform tool checks and all filesystem writes — safe to run on Linux CI.
+    #[arg(long, conflicts_with_all = ["only", "mac", "output"])]
+    validate: bool,
 }
 
 fn make_filter_options(only: Option<Vec<String>>, mac: Option<MacModeArg>) -> FilterOptions {
@@ -176,13 +181,25 @@ fn main() {
     let static_dir = root.join("static");
     let output_parent = cli.output.unwrap_or_else(|| root.join("dist"));
     let multiple = brands_to_build.len() > 1;
-    let filter_options = make_filter_options(cli.only, cli.mac);
+    let validate_only = cli.validate;
+    let filter_options = if validate_only {
+        // In validate mode --only/--mac are forbidden by clap; build a default
+        // FilterOptions without the platform-aware logging make_filter_options does.
+        FilterOptions::new().with_mac_mode(MacMode::All)
+    } else {
+        make_filter_options(cli.only, cli.mac)
+    };
 
     let mut errors: Vec<String> = Vec::new();
+    let (action_heading, success_msg, failure_msg) = if validate_only {
+        ("Validating", "Brand validation passed!", "Validation failed for")
+    } else {
+        ("Building", "Brand asset generation completed successfully!", "Generation failed for")
+    };
 
     for brand in &brands_to_build {
         if multiple {
-            println!("\n{}", format!("=== Building {} ===", brand).bold());
+            println!("\n{}", format!("=== {} {} ===", action_heading, brand).bold());
         }
 
         let source = brands_dir.join(brand);
@@ -194,19 +211,16 @@ fn main() {
             &static_dir,
             &output,
             filter_options.clone(),
+            validate_only,
         ) {
             Ok(_) => {
-                println!(
-                    "\n{} {}",
-                    "✓".green().bold(),
-                    "Brand asset generation completed successfully!".green()
-                );
+                println!("\n{} {}", "✓".green().bold(), success_msg.green());
             }
             Err(e) => {
                 eprintln!(
                     "\n{} {}: {}",
                     "✗".red().bold(),
-                    format!("Generation failed for '{}'", brand).red().bold(),
+                    format!("{} '{}'", failure_msg, brand).red().bold(),
                     e.to_string().red()
                 );
                 errors.push(brand.clone());
