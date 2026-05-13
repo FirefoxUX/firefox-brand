@@ -137,8 +137,8 @@
       "outputFileType": "png",
       "width": 300,
       "height": 300,
-      "paddingPixelsWidth": 75,
-      "paddingPixelsHeight": 75,
+      "paddingPixelsWidth": 85,
+      "paddingPixelsHeight": 85,
       "fit": "contain"
     },
     {
