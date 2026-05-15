@@ -1,7 +1,7 @@
 use clap::{Parser, ValueEnum};
 use firefox_brand_generator::{FilterOptions, MacMode, is_macos, run};
 use owo_colors::OwoColorize;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process;
 
 #[derive(Debug, Clone, ValueEnum)]
@@ -28,125 +28,217 @@ impl From<MacModeArg> for MacMode {
     version
 )]
 struct Cli {
-    /// Path to the configuration JSON file
-    #[arg(value_name = "CONFIG")]
-    config: PathBuf,
+    /// Brand to build (e.g. official, nightly, aurora, unofficial).
+    /// Omit to build every brand found under <ROOT>/brands/
+    brand: Option<String>,
 
-    /// Path to the brand-specific source folder
-    #[arg(value_name = "SOURCE")]
-    source: PathBuf,
+    /// Repo root. Auto-detected by walking up from the current directory
+    /// to find a folder containing config.json and brands/
+    #[arg(long, value_name = "DIR")]
+    root: Option<PathBuf>,
 
-    /// Path to the static assets folder
-    #[arg(value_name = "STATIC_DIR")]
-    static_dir: PathBuf,
+    /// Output parent directory. Each brand is written to <OUTPUT>/<BRAND>/.
+    /// Defaults to <ROOT>/dist
+    #[arg(short, long, value_name = "DIR")]
+    output: Option<PathBuf>,
 
-    /// Path to the output/destination folder
-    #[arg(short, long, value_name = "DIR", default_value = "dist")]
-    output: PathBuf,
-
-    #[arg(
-        long,
-        value_name = "TYPES",
-        value_delimiter = ',',
-        help = "Comma-separated list of transformation types to run. If specified, only these types will be run and --mac is ignored.\nAvailable types: raster, ico, icns, assets-car, copy, copy-preprocess, copy-image-mac, ds-store"
-    )]
+    /// Comma-separated list of transformation types to run. When specified, --mac is ignored.
+    /// Available types: raster, ico, icns, assets-car, copy, copy-preprocess, copy-image-mac, ds-store
+    #[arg(long, value_name = "TYPES", value_delimiter = ',')]
     only: Option<Vec<String>>,
 
-    /// Mac-specific transformation mode
-    #[arg(
-        long,
-        value_enum,
-        help = "Control macOS-specific transformations. Ignored if --only is used. Options:\n  - none (skip ds-store, icns, assets-car, copy-image-mac)\n  - simple (run icns, assets-car, copy-image-mac only)\n  - all (run all)."
-    )]
+    /// Control macOS-specific transformations. Ignored if --only is used.
+    /// Options: none (skip ds-store, icns, assets-car, copy-image-mac),
+    /// simple (run icns, assets-car, copy-image-mac only), all (run all).
+    /// Defaults to simple on macOS and none elsewhere.
+    #[arg(long, value_enum, value_name = "MODE")]
     mac: Option<MacModeArg>,
+
+    /// Validate config and brand assets without producing any output.
+    /// Skips platform tool checks and all filesystem writes — safe to run on Linux CI.
+    #[arg(long, conflicts_with_all = ["only", "mac", "output"])]
+    validate: bool,
 }
 
-fn main() {
-    let cli = Cli::parse();
-
-    // Validate paths
-    if !cli.config.exists() {
-        eprintln!(
-            "{} Config file not found: {}",
-            "Error:".red().bold(),
-            cli.config.display().to_string().yellow()
-        );
-        process::exit(1);
-    }
-
-    if !cli.source.exists() {
-        eprintln!(
-            "{} Source directory not found: {}",
-            "Error:".red().bold(),
-            cli.source.display().to_string().yellow()
-        );
-        process::exit(1);
-    }
-
-    if !cli.static_dir.exists() {
-        eprintln!(
-            "{} Static directory not found: {}",
-            "Error:".red().bold(),
-            cli.static_dir.display().to_string().yellow()
-        );
-        process::exit(1);
-    }
-
-    // Build filter options
-    let mut filter_options = if let Some(types) = cli.only {
+fn make_filter_options(only: Option<Vec<String>>, mac: Option<MacModeArg>) -> FilterOptions {
+    let filter_options = if let Some(types) = only {
         FilterOptions::new().with_types(types)
     } else {
         FilterOptions::new()
     };
 
-    // Apply Mac mode filtering
-    let mac_mode = if let Some(mac_mode) = cli.mac {
-        // Use explicitly specified mode
+    let mac_mode = if let Some(mac_mode) = mac {
         mac_mode.into()
+    } else if filter_options.only_types.is_some() {
+        MacMode::All
+    } else if is_macos() {
+        println!(
+            "{} Auto-detected macOS: enabling {} (icns + assets-car + copy-image-mac transformations)",
+            "[Info]".on_blue().bold(),
+            "simple Mac mode".bold()
+        );
+        println!("       To run all Mac-specific transformations, use the --mac all option.");
+        MacMode::Simple
     } else {
-        if filter_options.only_types.is_some() {
-            MacMode::All
-        } else if is_macos() {
-            println!(
-                "{} Auto-detected macOS: enabling {} (icns + assets-car + copy-image-mac transformations)",
-                "[Info]".on_blue().bold(),
-                "simple Mac mode".bold()
-            );
-            println!("       To run all Mac-specific transformations, use the --mac all option.");
-            MacMode::Simple
-        } else {
-            println!(
-                "{} Non-macOS platform detected: disabling Mac-specific transformations (ds-store, icns, assets-car, copy-image-mac)",
-                "[Info]".on_blue().bold()
-            );
-            MacMode::None
-        }
+        println!(
+            "{} Non-macOS platform detected: disabling Mac-specific transformations (ds-store, icns, assets-car, copy-image-mac)",
+            "[Info]".on_blue().bold()
+        );
+        MacMode::None
     };
-    filter_options = filter_options.with_mac_mode(mac_mode);
 
-    // Run the generator
-    match run(
-        &cli.config,
-        &cli.source,
-        &cli.static_dir,
-        &cli.output,
-        filter_options,
-    ) {
-        Ok(_) => {
-            println!(
-                "\n{} {}",
-                "✓".green().bold(),
-                "Brand asset generation completed successfully!".green()
-            );
+    filter_options.with_mac_mode(mac_mode)
+}
+
+fn find_repo_root() -> Option<PathBuf> {
+    let mut dir = std::env::current_dir().ok()?;
+    loop {
+        if dir.join("config.json").exists() && dir.join("brands").is_dir() {
+            return Some(dir);
         }
-        Err(e) => {
+        if !dir.pop() {
+            return None;
+        }
+    }
+}
+
+fn discover_brands(brands_dir: &Path) -> Vec<String> {
+    let mut brands: Vec<String> = std::fs::read_dir(brands_dir)
+        .into_iter()
+        .flatten()
+        .filter_map(|entry| {
+            let entry = entry.ok()?;
+            if entry.file_type().ok()?.is_dir() {
+                entry.file_name().into_string().ok()
+            } else {
+                None
+            }
+        })
+        .collect();
+    brands.sort();
+    brands
+}
+
+fn main() {
+    let cli = Cli::parse();
+
+    let root = if let Some(r) = cli.root {
+        if !r.join("config.json").exists() || !r.join("brands").is_dir() {
             eprintln!(
-                "\n{} {}: {}",
-                "✗".red().bold(),
-                "Generation failed".red().bold(),
-                e.to_string().red()
+                "{} '{}' is not a valid repo root (missing config.json or brands/)",
+                "Error:".red().bold(),
+                r.display().to_string().yellow()
             );
             process::exit(1);
         }
+        r
+    } else {
+        match find_repo_root() {
+            Some(r) => r,
+            None => {
+                eprintln!(
+                    "{} Could not find repo root (no config.json + brands/ directory found in current directory or any parent).",
+                    "Error:".red().bold()
+                );
+                eprintln!(
+                    "       Run from within the repo or use {} to specify the root.",
+                    "--root <DIR>".cyan()
+                );
+                process::exit(1);
+            }
+        }
+    };
+
+    let brands_dir = root.join("brands");
+    let available_brands = discover_brands(&brands_dir);
+
+    let brands_to_build: Vec<String> = if let Some(brand) = cli.brand {
+        if !available_brands.contains(&brand) {
+            eprintln!(
+                "{} Brand '{}' not found under {}",
+                "Error:".red().bold(),
+                brand.yellow(),
+                brands_dir.display().to_string().yellow()
+            );
+            eprintln!(
+                "       Available brands: {}",
+                available_brands.join(", ").cyan()
+            );
+            process::exit(1);
+        }
+        vec![brand]
+    } else {
+        if available_brands.is_empty() {
+            eprintln!(
+                "{} No brands found under {}",
+                "Error:".red().bold(),
+                brands_dir.display().to_string().yellow()
+            );
+            process::exit(1);
+        }
+        available_brands.clone()
+    };
+
+    let config_path = root.join("config.json");
+    let static_dir = root.join("static");
+    let output_parent = cli.output.unwrap_or_else(|| root.join("dist"));
+    let multiple = brands_to_build.len() > 1;
+    let validate_only = cli.validate;
+    let filter_options = if validate_only {
+        // In validate mode --only/--mac are forbidden by clap; build a default
+        // FilterOptions without the platform-aware logging make_filter_options does.
+        FilterOptions::new().with_mac_mode(MacMode::All)
+    } else {
+        make_filter_options(cli.only, cli.mac)
+    };
+
+    let mut errors: Vec<String> = Vec::new();
+    let (action_heading, success_msg, failure_msg) = if validate_only {
+        ("Validating", "Brand validation passed!", "Validation failed for")
+    } else {
+        ("Building", "Brand asset generation completed successfully!", "Generation failed for")
+    };
+
+    for brand in &brands_to_build {
+        if multiple {
+            println!("\n{}", format!("=== {} {} ===", action_heading, brand).bold());
+        }
+
+        let source = brands_dir.join(brand);
+        let output = output_parent.join(brand);
+
+        match run(
+            &config_path,
+            &source,
+            &static_dir,
+            &output,
+            filter_options.clone(),
+            validate_only,
+        ) {
+            Ok(_) => {
+                println!("\n{} {}", "✓".green().bold(), success_msg.green());
+            }
+            Err(e) => {
+                eprintln!(
+                    "\n{} {}: {}",
+                    "✗".red().bold(),
+                    format!("{} '{}'", failure_msg, brand).red().bold(),
+                    e.to_string().red()
+                );
+                errors.push(brand.clone());
+            }
+        }
+    }
+
+    if !errors.is_empty() {
+        if multiple {
+            eprintln!(
+                "\n{} {} brand(s) failed: {}",
+                "✗".red().bold(),
+                errors.len(),
+                errors.join(", ").yellow()
+            );
+        }
+        process::exit(1);
     }
 }

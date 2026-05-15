@@ -4,28 +4,37 @@ A tool for generating Firefox brand folder content in all its variations from a 
 
 ## Usage
 
+Run from anywhere inside the repo — the tool walks up to find the repo root (a directory containing `config.json` and `brands/`).
+
 ```bash
-# List of all available commands
-cargo run -- --help
-# Example
-cargo run -- ../config.json ../brands/official ../static -o ../dist-official
+# Build every brand under brands/
+firefox-brand-generator
+
+# Build a specific brand
+firefox-brand-generator official
+firefox-brand-generator nightly
+
+# Only run specific transformation types
+firefox-brand-generator official --only copy-preprocess,raster
+
+# Override the repo root (if auto-detection doesn't apply)
+firefox-brand-generator --root /path/to/repo
+
+# Override the output directory (default is <root>/dist)
+firefox-brand-generator official -o /tmp/build
 ```
 
-## Command Line Options
-
-### Syntax
-
-`firefox-brand-generator [OPTIONS] <CONFIG> <SOURCE> <STATIC_DIR>`
-
-### Arguments
-
-- **`CONFIG`** - Path to the configuration JSON file
-- **`SOURCE`** - Path to the brand-specific source folder
-- **`STATIC_DIR`** - Path to the static assets folder
+Derived paths for each brand:
+- Config: `{root}/config.json`
+- Source: `{root}/brands/{brand}/`
+- Static: `{root}/static/`
+- Output: `{output}/{brand}/` (defaults to `{root}/dist/{brand}/`)
 
 ### Options
 
-- **`-o, --output <DIR>`** - Path to the output/destination folder (default: `dist`)
+- **`[BRAND]`** - Brand to build. Omit to build all brands found under `{root}/brands/`
+- **`--root <DIR>`** - Repo root override (auto-detected by default)
+- **`-o, --output <DIR>`** - Output parent directory (default: `{root}/dist`). Each brand is written to `<DIR>/<BRAND>/`
 - **`--mac <MODE>`** - Control macOS-specific transformations
   - `none` - Skip all macOS-specific operations
   - `simple` - Run `icns`, `assets-car` only
@@ -36,6 +45,18 @@ cargo run -- ../config.json ../brands/official ../static -o ../dist-official
   - When specified, only these types will be run and `--mac` is ignored
 - **`-h, --help`** - Print help information
 - **`-V, --version`** - Print version information
+
+## Updating Firefox branding
+
+The generator's `dist/<brand>/` output is structured to be a drop-in replacement for the corresponding `browser/branding/<brand>/` directory in [mozilla-central](https://searchfox.org/firefox-main/source/browser/branding) — the folder layout, filenames, and relative paths match, including the per-brand `moz.build`, `jar.mn`, `locales/`, `content/`, and platform-specific subfolders.
+
+To regenerate assets, run `firefox-brand-generator --mac all` on macOS so the full set is produced (the macOS-only outputs `*.icns`, `Assets.car`, and `dsstore` are skipped on Linux, leaving a Linux-built `dist/` incomplete for a Firefox update). The result mirrors `browser/branding/<brand>/` file-for-file, so updating Firefox is a matter of copying the *changed* files from `dist/<brand>/` to the matching paths in your Firefox checkout.
+
+Notes:
+
+- **Upstream Firefox**: the existing branding assets in mozilla-central predate this generator, so even when an asset's visual content is unchanged, the regenerated binary will be very similar but not identical. To keep diffs minimal and reviewable, only replace files that have actually changed. Don't bulk-overwrite the directory just because the tool produced a fresh version.
+- **Firefox forks** can add their own brand by creating a new directory under `brands/<your-brand>/` mirroring `brands/official/` (SVG sources, `brand-config.json`, etc.), then running `firefox-brand-generator <your-brand>`.
+- The top-level `browser/branding/{moz.build, branding-common.mozbuild, docs/}` files are *not* produced by this tool.
 
 ## Configuration Format
 

@@ -17,30 +17,46 @@ pub fn generate(
     brand_config: &BrandConfig,
     paths: &GeneratorPaths,
     filter_options: &FilterOptions,
+    validate_only: bool,
 ) -> Result<()> {
     // Detect platform capabilities
     let capabilities = PlatformCapabilities::detect();
 
-    // Warn about missing tools
-    if !capabilities.has_iconutil {
-        eprintln!(
-            "{} {} {}",
-            "Warning:".yellow().bold(),
-            "iconutil".cyan(),
-            "not found. ICNS generation will be skipped.".dimmed()
-        );
-    }
-    if !capabilities.has_actool {
-        eprintln!(
-            "{} {} {}",
-            "Warning:".yellow().bold(),
-            "actool".cyan(),
-            "not found. Assets.car generation will be skipped.".dimmed()
-        );
+    // In validate mode, ignore the host's platform tooling — we want to
+    // validate Mac-only transformations even on Linux CI.
+    if !validate_only {
+        if !capabilities.has_iconutil {
+            eprintln!(
+                "{} {} {}",
+                "Warning:".yellow().bold(),
+                "iconutil".cyan(),
+                "not found. ICNS generation will be skipped.".dimmed()
+            );
+        }
+        if !capabilities.has_actool {
+            eprintln!(
+                "{} {} {}",
+                "Warning:".yellow().bold(),
+                "actool".cyan(),
+                "not found. Assets.car generation will be skipped.".dimmed()
+            );
+        }
     }
 
+    // Merge brand name into filter options so `only` fields in config.json are respected.
+    // In validate mode, force MacMode::All so Mac-specific transformations are still inspected.
+    let effective_filter = FilterOptions {
+        only_types: filter_options.only_types.clone(),
+        mac_mode: if validate_only {
+            crate::generator::filter::MacMode::All
+        } else {
+            filter_options.mac_mode
+        },
+        brand_name: brand_config.env.get("name").cloned(),
+    };
+
     // Filter transformations
-    let filtered = filter_transformations(&config.transformations, filter_options, &capabilities);
+    let filtered = filter_transformations(&config.transformations, &effective_filter, &capabilities);
 
     // Create transformation context
     let ctx = TransformationContext {
@@ -51,16 +67,19 @@ pub fn generate(
         capabilities: &capabilities,
     };
 
-    // Execute each transformation
+    // Execute (or validate) each transformation
     let mut success_count = 0;
     let mut skip_count = 0;
     let mut error_count = 0;
+
+    let action_verb = if validate_only { "Validating" } else { "Processing" };
 
     for (transformation, should_warn) in filtered {
         let t_type = transformation.transformation_type();
         let output = transformation.output_path();
 
-        if should_warn {
+        // Only honour missing-tool warnings when actually executing.
+        if should_warn && !validate_only {
             eprintln!(
                 "{} {} transformation for '{}': {}",
                 "Skipping".yellow(),
@@ -82,13 +101,19 @@ pub fn generate(
 
         print!(
             "{} {} {} {}... ",
-            "Processing".dimmed(),
+            action_verb.dimmed(),
             t_type.bold(),
             "->".dimmed(),
             output
         );
 
-        match transformations::execute(&transformation, &ctx) {
+        let result = if validate_only {
+            transformations::validate(&transformation, &ctx)
+        } else {
+            transformations::execute(&transformation, &ctx)
+        };
+
+        match result {
             Ok(_) => {
                 println!("{}", "✓".green().bold());
                 success_count += 1;
@@ -101,17 +126,21 @@ pub fn generate(
         }
     }
 
+    let success_label = if validate_only { "Valid:   " } else { "Success: " };
+
     println!();
     println!("{}", "Summary:".bold().underline());
-    println!("  Success: {}", success_count.to_string());
+    println!("  {}{}", success_label, success_count.to_string());
     println!("  Skipped: {}", skip_count.to_string());
     println!("  Errors:  {}", error_count.to_string());
 
     if error_count > 0 {
-        Err(crate::error::Error::Transformation(format!(
-            "{} transformation(s) failed",
-            error_count
-        )))
+        let msg = if validate_only {
+            format!("{} transformation(s) failed validation", error_count)
+        } else {
+            format!("{} transformation(s) failed", error_count)
+        };
+        Err(crate::error::Error::Transformation(msg))
     } else {
         Ok(())
     }

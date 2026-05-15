@@ -9,9 +9,8 @@
       Square70x70Logo='browser\VisualElements\VisualElements_70.png'
       ForegroundText='light'
 {{#if name == unofficial}}
-      BackgroundColor='#14171a'
+      BackgroundColor='#14171a'/>
 {{#else}}
-      BackgroundColor='#20123a'
+      BackgroundColor='#20123a'/>
 {{#endif}}
-   />
 </Application>

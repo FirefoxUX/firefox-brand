@@ -21,6 +21,7 @@ pub fn run(
     static_dir: &Path,
     output_dir: &Path,
     filter_options: FilterOptions,
+    validate_only: bool,
 ) -> Result<()> {
     // Load configuration files
     let config = load_config(config_path)?;
@@ -37,7 +38,7 @@ pub fn run(
     };
 
     // Run the generator
-    generate(&config, &brand_config, &paths, &filter_options)?;
+    generate(&config, &brand_config, &paths, &filter_options, validate_only)?;
 
     Ok(())
 }

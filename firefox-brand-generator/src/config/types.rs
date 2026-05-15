@@ -145,10 +145,18 @@ pub enum Transformation {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TransformationEntry {
+    #[serde(default)]
+    pub only: Option<Vec<String>>,
+    #[serde(flatten)]
+    pub transformation: Transformation,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
     #[serde(rename = "brandConfigPath")]
     pub brand_config_path: String,
-    pub transformations: Vec<Transformation>,
+    pub transformations: Vec<TransformationEntry>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
