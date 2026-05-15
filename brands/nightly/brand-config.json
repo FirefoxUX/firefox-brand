@@ -9,8 +9,8 @@
     "brandFullName": "Firefox Nightly",
     "brandShortcutName": "Firefox Nightly",
     "dmgWindowPosition": "200 120",
-    "dmgWindowSize": "512 367",
-    "dmgAppIconPosition": "103 185",
-    "dmgAppDropLinkPosition": "406 185"
+    "dmgWindowSize": "680 425",
+    "dmgAppIconPosition": "209 190",
+    "dmgAppDropLinkPosition": "472 190"
   }
 }

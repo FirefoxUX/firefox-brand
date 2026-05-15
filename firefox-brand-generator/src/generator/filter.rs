@@ -4,8 +4,8 @@ use std::collections::HashSet;
 
 #[derive(Debug, Clone, Copy)]
 pub enum MacMode {
-    None,   // Skip ds-store, icns, and assets-car
-    Simple, // Run icns and assets-car only
+    None,   // Skip ds-store, icns, assets-car, and copy-image-mac
+    Simple, // Run icns, assets-car, and copy-image-mac only (skip ds-store)
     All,    // Run all transformations (default behavior)
 }
 
@@ -71,7 +71,7 @@ pub fn filter_transformations(
 
             // Check Mac mode filtering
             let mac_allowed = match options.mac_mode {
-                MacMode::None => !matches!(transformation_type, "ds-store" | "icns" | "assets-car"),
+                MacMode::None => !matches!(transformation_type, "ds-store" | "icns" | "assets-car" | "copy-image-mac"),
                 MacMode::Simple => !matches!(transformation_type, "ds-store"),
                 MacMode::All => true,
             };
@@ -94,6 +94,7 @@ pub fn filter_transformations(
             let platform_available = match transformation_type {
                 "icns" => capabilities.has_iconutil,
                 "assets-car" => capabilities.has_actool,
+                "copy-image-mac" => capabilities.has_sips,
                 _ => true,
             };
 

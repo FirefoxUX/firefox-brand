@@ -15,6 +15,7 @@
       "blur-material" : 0.5,
       "layers" : [
         {
+          "hidden" : false,
           "image-name" : "release-1.svg",
           "name" : "release-1"
         }

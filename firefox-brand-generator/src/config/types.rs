@@ -108,6 +108,16 @@ pub enum Transformation {
         #[serde(rename = "outputPath")]
         output_path: String,
     },
+    CopyImageMac {
+        #[serde(rename = "fileType")]
+        file_type: FileType,
+        #[serde(rename = "inputPath")]
+        input_path: String,
+        #[serde(rename = "outputPath")]
+        output_path: String,
+        #[serde(rename = "dpi")]
+        dpi: Option<f64>,
+    },
     DsStore {
         #[serde(rename = "outputPath")]
         output_path: String,
@@ -166,6 +176,7 @@ impl Transformation {
             Transformation::AssetsCar { output_path, .. } => output_path,
             Transformation::Copy { output_path, .. } => output_path,
             Transformation::CopyPreprocess { output_path, .. } => output_path,
+            Transformation::CopyImageMac { output_path, .. } => output_path,
             Transformation::DsStore { output_path, .. } => output_path,
         }
     }
@@ -178,6 +189,7 @@ impl Transformation {
             Transformation::AssetsCar { .. } => "assets-car",
             Transformation::Copy { .. } => "copy",
             Transformation::CopyPreprocess { .. } => "copy-preprocess",
+            Transformation::CopyImageMac { .. } => "copy-image-mac",
             Transformation::DsStore { .. } => "ds-store",
         }
     }

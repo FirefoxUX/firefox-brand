@@ -258,10 +258,11 @@
       "outputPath": "branding.nsi"
     },
     {
-      "type": "copy",
+      "type": "copy-image-mac",
       "fileType": "source",
       "inputPath": "mac/background.png",
-      "outputPath": "background.png"
+      "outputPath": "background.png",
+      "dpi": 144.0
     },
     {
       "type": "copy-preprocess",
