@@ -286,6 +286,11 @@ pub fn validate(transformation: &Transformation, ctx: &TransformationContext) ->
             file_type,
             input_path,
             ..
+        }
+        | Transformation::CopyImageMac {
+            file_type,
+            input_path,
+            ..
         } => {
             resolve_input_path(file_type, input_path, ctx.source_dir, ctx.static_dir)?;
         }
