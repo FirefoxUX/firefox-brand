@@ -10,6 +10,12 @@ pub fn save(img: &DynamicImage, path: &Path, format: &OutputFileType) -> Result<
         std::fs::create_dir_all(parent)?;
     }
 
+    // BMP: the NSIS installer requires 24-bit BMP3 (BITMAPINFOHEADER, no alpha).
+    if matches!(format, OutputFileType::Bmp) {
+        img.to_rgb8().save_with_format(path, ImageFormat::Bmp)?;
+        return Ok(());
+    }
+
     let image_format = match format {
         OutputFileType::Png => ImageFormat::Png,
         OutputFileType::Jpg => ImageFormat::Jpeg,
