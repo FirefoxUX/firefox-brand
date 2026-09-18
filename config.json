@@ -549,22 +549,34 @@
       "fit": "contain"
     },
     {
-      "type": "copy",
+      "type": "raster",
       "fileType": "source",
       "inputPath": "windows/wizard-header.png",
-      "outputPath": "wizHeader.bmp"
+      "outputPath": "wizHeader.bmp",
+      "outputFileType": "bmp",
+      "width": 150,
+      "height": 57,
+      "fit": "fill"
     },
     {
-      "type": "copy",
+      "type": "raster",
       "fileType": "source",
       "inputPath": "windows/wizard-header-rtl.png",
-      "outputPath": "wizHeaderRTL.bmp"
+      "outputPath": "wizHeaderRTL.bmp",
+      "outputFileType": "bmp",
+      "width": 150,
+      "height": 57,
+      "fit": "fill"
     },
     {
-      "type": "copy",
+      "type": "raster",
       "fileType": "source",
       "inputPath": "windows/wizard-banner.png",
-      "outputPath": "wizWatermark.bmp"
+      "outputPath": "wizWatermark.bmp",
+      "outputFileType": "bmp",
+      "width": 164,
+      "height": 314,
+      "fit": "fill"
     },
     {
       "type": "assets-car",
